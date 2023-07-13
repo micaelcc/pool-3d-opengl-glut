@@ -167,7 +167,11 @@ void Game::updateCameraMode(int cameraMode = 1)
 
     if (this->cameraMode == CAMERA_MODES::RANDOM_BALL)
     {
-        int ball = Random::generateRandom(15, 0);
+        int ball = 0;
+        do
+        {
+            ball = Random::generateRandom(15, 0);
+        } while (!this->balls[ball]->isEnabled());
 
         cameraPosition->x = 1.6;
         cameraPosition->y = 1.5;
@@ -442,6 +446,11 @@ void Game::exitGame()
 
     free(floor);
     free(wall);
+
+    // Finalizar SDL e SDL_mixer
+    Mix_CloseAudio();
+
+    SDL_Quit();
 
     free(this->cue);
 
