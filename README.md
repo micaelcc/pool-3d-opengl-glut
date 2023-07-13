@@ -24,7 +24,7 @@ g++ *.o -o main -lGL -lglut -lassimp -lGLU -lSOIL -lSDL2 -lSDL2_mixer
 ./main
 ```
 
-#### Executando via python
+#### Executando via python (testado apenas no Linux)
 
 Tenha python3 instalado no seu sistema
 
