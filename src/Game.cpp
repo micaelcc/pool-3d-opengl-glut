@@ -435,24 +435,40 @@ void Game::exitGame()
     for (Ball *ball : this->balls)
     {
         free(ball);
-    };
+    }
 
     for (Point *pocket : this->pockets)
     {
         free(pocket);
     }
 
+    for (Audio *audio : this->collisionAudios)
+    {
+        audio->clear();
+        free(audio);
+    }
+
+    for (Audio *audio : this->cueHitAudios)
+    {
+        audio->clear();
+        free(audio);
+    }
+
+    this->pocketAudio->clear();
+
+    free(this->pocketAudio);
+
     free(table);
 
     free(floor);
+
     free(wall);
 
-    // Finalizar SDL e SDL_mixer
+    free(this->cue);
+
     Mix_CloseAudio();
 
     SDL_Quit();
-
-    free(this->cue);
 
     exit(1);
 }
