@@ -84,6 +84,22 @@ void Game::init()
 
     this->wall = new Wall("../assets/textures/BrickWall.png", "../assets/textures/CeramicWall.png");
 
+    this->collisionAudios = {new Audio(), new Audio(), new Audio(), new Audio()};
+
+    this->collisionAudios[0]->load("../assets/audios/Collision1.mp3");
+    this->collisionAudios[1]->load("../assets/audios/Collision2.mp3");
+    this->collisionAudios[2]->load("../assets/audios/Collision3.mp3");
+    this->collisionAudios[3]->load("../assets/audios/Collision4.mp3");
+
+    this->cueHitAudios = {new Audio(), new Audio()};
+
+    this->cueHitAudios[0]->load("../assets/audios/CueHit.mp3");
+    this->cueHitAudios[1]->load("../assets/audios/CueHit2.mp3");
+
+    this->pocketAudio = new Audio();
+
+    this->pocketAudio->load("../assets/audios/Pocket.mp3");
+
     cameraPosition = new Point(-1, -1, -1);
     cameraCenter = new Point(-1, -1, -1);
 
@@ -184,6 +200,7 @@ void Game::update()
 
     if (this->forceApplied >= 1 || this->applying_force == HIT_BALL && !this->balls[WHITE_CUE_BALL]->isMoving())
     {
+        this->cueHitAudios[Random::generateRandom(1, 0)]->play();
         this->balls[WHITE_CUE_BALL]->setDirection(
             this->cue->getDirection()->x,
             this->cue->getDirection()->y,
@@ -266,7 +283,11 @@ void Game::checkCollisions()
         for (int j = i + 1; j < this->balls.size(); ++j)
             if (balls[i]->isEnabled() && balls[j]->isEnabled() &&
                 Collision::checkCollision(this->balls[i], this->balls[j]))
+            {
+                int random = Random::generateRandom(3, 0);
+                this->collisionAudios[random]->play();
                 Collision::updateSpeeds(this->balls[i], this->balls[j]);
+            }
 }
 
 bool Game::checkCollisionWithOutTable(Ball ball)
@@ -281,6 +302,8 @@ void Game::checkPockets()
         for (Point *pocket : this->pockets)
             if (ball->isEnabled() && (this->checkCollisionWithOutTable(*ball) || Collision::getDistance(pocket, ball->getPosition()) < BALL_RADIUS))
             {
+                this->pocketAudio->play();
+
                 if (ball->getType() != WHITE_CUE_BALL)
                     ball->disable();
                 else

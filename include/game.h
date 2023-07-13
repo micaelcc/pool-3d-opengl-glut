@@ -51,6 +51,9 @@ private:
     Floor *floor;
     Wall *wall;
     int cameraMode;
+    std::vector<Audio *> collisionAudios;
+    std::vector<Audio *> cueHitAudios;
+    Audio *pocketAudio;
 
 public:
     Game();
