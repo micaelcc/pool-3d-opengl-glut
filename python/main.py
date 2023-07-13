@@ -5,6 +5,7 @@ import signal
 import datetime 
 
 GCC_COMPILE_C_FILES = "g++ -c ../src/*.cpp && g++ *.o -o main -lGL -lglut -lassimp -lGLU -lSOIL -lSDL2 -lSDL2_mixer"
+CLOSE_GAME_COMMAND = f'xdotool search --name "Side Pocket" windowactivate --sync sleep 0.1 key --window %@ "q"'
 
 path = os.path.dirname(os.path.abspath(__file__))
 os.chdir(path + '/../src')
@@ -29,6 +30,9 @@ def hasFileChanged():
                 return True
     return False
 
+def closeGame():
+    os.killpg(os.getpgid(process.pid), signal.SIGINT)
+    subprocess.run(CLOSE_GAME_COMMAND, shell=True)
 
 def recompile():    
     subprocess.call(GCC_COMPILE_C_FILES,shell = True)
@@ -39,8 +43,7 @@ process = subprocess.Popen(["./main"], preexec_fn=os.setsid)
 
 while True:
     if hasFileChanged():
-        os.killpg(os.getpgid(process.pid), signal.SIGINT)
-
+        closeGame()
         recompile()
         process = subprocess.Popen(["./main"], preexec_fn=os.setsid)
 
