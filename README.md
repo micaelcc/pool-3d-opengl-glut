@@ -1,3 +1,7 @@
+## Demo
+
+![](.github/demo.gif)
+
 ## Instruções
 
 Tenha glutgl, assimp e sdl instalado no seu sistema
